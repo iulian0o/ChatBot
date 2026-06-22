@@ -1,4 +1,4 @@
-import './CodeEditor.css'
+import './styles/CodeEditor.css'
 
 const LANGUAGES = ['javascript', 'python', 'java', 'typescript', 'c', 'cpp', 'go', 'rust']
 

@@ -1,0 +1,108 @@
+.about {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.about-section { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.about-heading {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--font-mono);
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.about-sub {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Language list */
+.lang-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
+.lang-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 1rem;
+}
+
+.lang-name {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.lang-note {
+  font-size: 0.83rem;
+  color: var(--text-muted);
+}
+
+/* Model cards */
+.model-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.model-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.model-card h3 {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--text);
+}
+
+.model-card p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* Team */
+.team-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+
+.team-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.team-id {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 80px;
+}
+
+.team-role {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+@media (max-width: 600px) {
+  .model-grid { grid-template-columns: 1fr; }
+}
