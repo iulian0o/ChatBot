@@ -1,4 +1,4 @@
-import './ReviewOutput.css'
+import './styles/ReviewOutput.css'
 
 function ReviewOutput({ reply, loading }) {
   if (loading) {

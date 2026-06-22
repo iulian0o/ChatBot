@@ -5,9 +5,9 @@ function Home() {
   const navigate = useNavigate()
 
   const features = [
-    { icon: '🐛', title: 'Bug detection', desc: 'Spots logic errors, off-by-ones, null refs, and common anti-patterns.' },
-    { icon: '🔒', title: 'Security scan', desc: 'Flags injection risks, exposed secrets, and insecure defaults.' },
-    { icon: '⚡', title: 'Performance tips', desc: 'Highlights unnecessary loops, memory leaks, and costly operations.' },
+    { icon: 'fa-bug', title: 'Bug detection', desc: 'Spots logic errors, off-by-ones, null refs, and common anti-patterns.' },
+    { icon: 'fa-shield-halved', title: 'Security scan', desc: 'Flags injection risks, exposed secrets, and insecure defaults.' },
+    { icon: 'fa-gauge-high', title: 'Performance tips', desc: 'Highlights unnecessary loops, memory leaks, and costly operations.' },
   ]
 
   return (
@@ -29,7 +29,7 @@ function Home() {
       <section className="home-features">
         {features.map(({ icon, title, desc }) => (
           <div key={title} className="home-card">
-            <span className="home-card-icon">{icon}</span>
+            <i className={`fa-solid ${icon} home-card-icon`}></i>
             <h3>{title}</h3>
             <p>{desc}</p>
           </div>

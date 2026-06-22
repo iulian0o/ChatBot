@@ -69,7 +69,8 @@
 }
 
 .home-card-icon {
-  font-size: 1.6rem;
+  font-size: 1.8rem;
+  color: var(--accent);
 }
 
 .home-card h3 {
