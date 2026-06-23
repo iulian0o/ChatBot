@@ -7,13 +7,21 @@ function ReviewOutput({ reply, loading }) {
         <span className="spinner" aria-label="Loading" />
         <p>Reviewing your code…</p>
       </div>
-    )
+    );
   }
+
+  return (
+    <div className="panel-card output-box">
+      <div className="message-appear chat-message">
+        {reply || "The review will appear here."}
+      </div>
+    </div>
+  );
 
   if (!reply) {
     return (
       <div className="output-box output-empty">
-        <p>The review will appear here.</p>
+        <p className=''>The review will appear here.</p>
       </div>
     )
   }

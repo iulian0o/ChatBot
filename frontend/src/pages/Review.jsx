@@ -1,17 +1,17 @@
 import { useState, useRef } from 'react'
 
-import CodeEditor   from '../components/CodeEditor'
+import CodeEditor from '../components/CodeEditor'
 import ReviewOutput from '../components/ReviewOutput'
-import InputBar     from '../components/InputBar'
+import InputBar from '../components/InputBar'
 import './styles/Review.css'
 
 function Review() {
-  const [code, setCode]         = useState('')
+  const [code, setCode] = useState('')
   const [language, setLanguage] = useState('javascript')
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState(null)
-  const [reply, setReply]       = useState(null)
-  const [history, setHistory]   = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [reply, setReply] = useState(null)
+  const [history, setHistory] = useState([])
 
   const outputRef = useRef(null)
 
