@@ -9,4 +9,4 @@ router.get('/health', (req, res) => {
   })
 })
 
-export default health
+export default router
