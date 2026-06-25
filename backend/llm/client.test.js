@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { afterEach, describe, it } from 'node:test'
 
-import { reviewCode } from './client.js'
+import { getLlmMetadata, reviewCode } from './client.js'
 
 const ORIGINAL_ENV = {
   GROQ_API_KEY: process.env.GROQ_API_KEY,
@@ -122,5 +122,27 @@ describe('reviewCode', () => {
     await reviewCode('console.log(1)', 'javascript', [])
 
     assert.equal(requestBody.model, 'openai/gpt-oss-20b')
+  })
+})
+
+describe('getLlmMetadata', () => {
+  it('returns default stub metadata when env is not configured', () => {
+    delete process.env.LLM_PROVIDER
+    delete process.env.LLM_MODEL
+
+    assert.deepEqual(getLlmMetadata(), {
+      provider: 'stub',
+      model: 'stub-code-reviewer',
+    })
+  })
+
+  it('returns the Groq fallback model when provider is groq and model is not configured', () => {
+    process.env.LLM_PROVIDER = ' groq '
+    delete process.env.LLM_MODEL
+
+    assert.deepEqual(getLlmMetadata(), {
+      provider: 'groq',
+      model: 'openai/gpt-oss-20b',
+    })
   })
 })

@@ -5,7 +5,7 @@ const DEFAULT_MODEL = 'stub-code-reviewer'
 const DEFAULT_GROQ_MODEL = 'openai/gpt-oss-20b'
 const GROQ_CHAT_COMPLETIONS_URL = 'https://api.groq.com/openai/v1/chat/completions'
 
-function getLlmConfig() {
+export function getLlmMetadata() {
   const provider = process.env.LLM_PROVIDER?.trim().toLowerCase() || DEFAULT_PROVIDER
   const fallbackModel = provider === 'groq' ? DEFAULT_GROQ_MODEL : DEFAULT_MODEL
 
@@ -58,7 +58,7 @@ async function reviewWithGroq(messages, model) {
 
 export async function reviewCode(code, language, history = []) {
   const messages = buildMessages(code, language, history)
-  const { provider, model } = getLlmConfig()
+  const { provider, model } = getLlmMetadata()
 
   if (provider === 'stub') {
     return reviewWithStub(messages)
