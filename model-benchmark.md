@@ -1,10 +1,10 @@
-# Student C Model Benchmark
+# Model Benchmark
 
 Date: June 25, 2026
 
 ## Test Setup
 
-The same Python snippet was reviewed with three Groq-hosted models through the Student C LLM client and benchmark helper.
+The same Python snippet was reviewed with three Groq-hosted models through the LLM client and benchmark helper.
 
 ```python
 def calculate_discount(price, discount):
