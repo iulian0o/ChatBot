@@ -93,5 +93,34 @@ describe('reviewCode', () => {
     assert.equal(body.messages.at(-1).role, 'user')
     assert.match(body.messages.at(-1).content, /```javascript\nconsole\.log\(1\)\n```/)
   })
-})
 
+  it('uses the current Groq fallback model when no model is configured', async () => {
+    process.env.LLM_PROVIDER = 'groq'
+    process.env.GROQ_API_KEY = 'test-key'
+    delete process.env.LLM_MODEL
+
+    let requestBody
+    globalThis.fetch = async (url, options) => {
+      requestBody = JSON.parse(options.body)
+
+      return {
+        ok: true,
+        async json() {
+          return {
+            choices: [
+              {
+                message: {
+                  content: 'Looks fine for this small snippet.',
+                },
+              },
+            ],
+          }
+        },
+      }
+    }
+
+    await reviewCode('console.log(1)', 'javascript', [])
+
+    assert.equal(requestBody.model, 'openai/gpt-oss-20b')
+  })
+})

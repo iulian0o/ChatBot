@@ -2,12 +2,16 @@ import { buildMessages } from './history.js'
 
 const DEFAULT_PROVIDER = 'stub'
 const DEFAULT_MODEL = 'stub-code-reviewer'
+const DEFAULT_GROQ_MODEL = 'openai/gpt-oss-20b'
 const GROQ_CHAT_COMPLETIONS_URL = 'https://api.groq.com/openai/v1/chat/completions'
 
 function getLlmConfig() {
+  const provider = process.env.LLM_PROVIDER?.trim().toLowerCase() || DEFAULT_PROVIDER
+  const fallbackModel = provider === 'groq' ? DEFAULT_GROQ_MODEL : DEFAULT_MODEL
+
   return {
-    provider: process.env.LLM_PROVIDER?.trim().toLowerCase() || DEFAULT_PROVIDER,
-    model: process.env.LLM_MODEL?.trim() || DEFAULT_MODEL,
+    provider,
+    model: process.env.LLM_MODEL?.trim() || fallbackModel,
   }
 }
 
