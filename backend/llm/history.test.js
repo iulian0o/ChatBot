@@ -18,6 +18,13 @@ describe('buildReviewUserMessage', () => {
       ].join('\n'),
     )
   })
+
+  it('uses language aliases in the fenced markdown block', () => {
+    const message = buildReviewUserMessage('const value = 1', 'js')
+
+    assert.match(message, /Please review this javascript code:/)
+    assert.match(message, /```javascript\nconst value = 1\n```/)
+  })
 })
 
 describe('buildMessages', () => {
