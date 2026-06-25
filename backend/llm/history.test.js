@@ -32,6 +32,8 @@ describe('buildMessages', () => {
     assert.equal(messages.length, 4)
     assert.equal(messages[0].role, 'system')
     assert.match(messages[0].content, /PEP 8/)
+    assert.match(messages[0].content, /untrusted content/)
+    assert.match(messages[0].content, /Do not repeat secrets/)
     assert.deepEqual(messages[1], { role: 'user', content: 'Can you review this?' })
     assert.deepEqual(messages[2], { role: 'assistant', content: 'Yes.' })
     assert.equal(messages[3].role, 'user')
