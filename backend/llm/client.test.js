@@ -7,6 +7,7 @@ const ORIGINAL_ENV = {
   GROQ_API_KEY: process.env.GROQ_API_KEY,
   LLM_MODEL: process.env.LLM_MODEL,
   LLM_PROVIDER: process.env.LLM_PROVIDER,
+  LLM_TIMEOUT_MS: process.env.LLM_TIMEOUT_MS,
 }
 
 const originalFetch = globalThis.fetch
@@ -122,6 +123,61 @@ describe('reviewCode', () => {
     await reviewCode('console.log(1)', 'javascript', [])
 
     assert.equal(requestBody.model, 'openai/gpt-oss-20b')
+  })
+
+  it('wraps Groq HTTP errors with an LLM error message', async () => {
+    process.env.LLM_PROVIDER = 'groq'
+    process.env.GROQ_API_KEY = 'test-key'
+
+    globalThis.fetch = async () => ({
+      ok: false,
+      status: 401,
+      async json() {
+        return {
+          error: {
+            message: 'Invalid API key',
+          },
+        }
+      },
+    })
+
+    await assert.rejects(
+      reviewCode('console.log(1)', 'javascript', []),
+      /LLM request failed: Invalid API key/,
+    )
+  })
+
+  it('wraps network errors with an LLM error message', async () => {
+    process.env.LLM_PROVIDER = 'groq'
+    process.env.GROQ_API_KEY = 'test-key'
+
+    globalThis.fetch = async () => {
+      throw new Error('socket hang up')
+    }
+
+    await assert.rejects(
+      reviewCode('console.log(1)', 'javascript', []),
+      /LLM request failed: socket hang up/,
+    )
+  })
+
+  it('times out slow Groq requests', async () => {
+    process.env.LLM_PROVIDER = 'groq'
+    process.env.GROQ_API_KEY = 'test-key'
+    process.env.LLM_TIMEOUT_MS = '5'
+
+    globalThis.fetch = async (url, options) => new Promise((resolve, reject) => {
+      options.signal.addEventListener('abort', () => {
+        const error = new Error('The operation was aborted')
+        error.name = 'AbortError'
+        reject(error)
+      })
+    })
+
+    await assert.rejects(
+      reviewCode('console.log(1)', 'javascript', []),
+      /LLM request timed out after 5ms/,
+    )
   })
 })
 
