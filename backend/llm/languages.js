@@ -26,15 +26,36 @@ export const LANGUAGE_HINTS = {
   rust: 'Mention ownership, borrowing, error handling, panic risks, and idiomatic Result usage.',
 }
 
+const LANGUAGE_ALIASES = {
+  js: 'javascript',
+  jsx: 'javascript',
+  ts: 'typescript',
+  tsx: 'typescript',
+  py: 'python',
+  csharp: 'csharp',
+  'c#': 'csharp',
+  cs: 'csharp',
+  cpp: 'cpp',
+  'c++': 'cpp',
+  rb: 'ruby',
+  golang: 'go',
+  rs: 'rust',
+}
+
 export function normalizeLanguage(language) {
   if (typeof language !== 'string') {
     return 'plaintext'
   }
 
-  return language.trim().toLowerCase() || 'plaintext'
+  const normalizedLanguage = language.trim().toLowerCase()
+
+  if (!normalizedLanguage) {
+    return 'plaintext'
+  }
+
+  return LANGUAGE_ALIASES[normalizedLanguage] || normalizedLanguage
 }
 
 export function getLanguageHint(language) {
   return LANGUAGE_HINTS[normalizeLanguage(language)] || 'Apply general code review best practices for this language.'
 }
-
