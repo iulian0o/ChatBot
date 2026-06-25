@@ -37,4 +37,29 @@ describe('buildMessages', () => {
     assert.equal(messages[3].role, 'user')
     assert.match(messages[3].content, /```python\nprint\("hello"\)\n```/)
   })
+
+  it('keeps only the latest valid history messages', () => {
+    const history = Array.from({ length: 10 }, (_, index) => ({
+      role: index % 2 === 0 ? 'user' : 'assistant',
+      content: `message ${index + 1}`,
+    }))
+
+    const messages = buildMessages('console.log(1)', 'javascript', history)
+    const historyMessages = messages.slice(1, -1)
+
+    assert.equal(historyMessages.length, 8)
+    assert.equal(historyMessages[0].content, 'message 3')
+    assert.equal(historyMessages.at(-1).content, 'message 10')
+  })
+
+  it('truncates very long history message content', () => {
+    const longContent = 'a'.repeat(2100)
+
+    const messages = buildMessages('console.log(1)', 'javascript', [
+      { role: 'user', content: longContent },
+    ])
+
+    assert.ok(messages[1].content.length < longContent.length)
+    assert.match(messages[1].content, /\[Message truncated for context length\]$/)
+  })
 })
