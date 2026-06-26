@@ -1,12 +1,11 @@
-import {Router} from 'express'
+import { Router } from 'express'
+import { getLlmMetadata } from '../llm/client.js'
 
 const router = Router()
 
 router.get('/health', (req, res) => {
-  res.json({
-    status: 'ok',
-    model: process.env.LLM_MODEL || 'not set',
-  })
+  const { model } = getLlmMetadata()
+  res.json({ status: 'ok', model })
 })
 
 export default router

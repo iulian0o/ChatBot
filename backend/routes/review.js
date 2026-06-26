@@ -1,11 +1,17 @@
-import {Router} from 'express'
+import { Router } from 'express'
+import { reviewCode } from '../llm/client.js'
 
 const router = Router()
 
-// Demo code: Khan will replace this
+router.post('/review', async (req, res, next) => {
+  const { code, language, history = [] } = req.body
 
-router.post('/review', (req, res) => {
-  res.json({reply: 'They say Satoru Gojo is the strongest, but your code might be stronger: good review'})
+  try {
+    const reply = await reviewCode(code, language, history)
+    res.json({ reply })
+  } catch (err) {
+    next(err)
+  }
 })
 
 export default router
