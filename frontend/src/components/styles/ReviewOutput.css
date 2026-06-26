@@ -26,11 +26,124 @@
   box-sizing: border-box;
 }
 
+.output-content,
 .chat-message {
   font-family: sans-serif;
   color: #e2e8f0; 
-  line-height: 1.5;
+  line-height: 1.6;
   word-break: break-word;
+}
+
+.output-empty {
+  color: #94a3b8;
+}
+
+.output-loading {
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.output-text {
+  margin: 0 0 0.9rem;
+}
+
+.review-heading {
+  color: #f8fafc;
+  font-size: 1rem;
+  line-height: 1.35;
+  margin: 1rem 0 0.45rem;
+}
+
+.review-heading:first-child {
+  margin-top: 0;
+}
+
+.review-list {
+  margin: 0 0 1rem 1.25rem;
+  padding: 0;
+}
+
+.review-list li {
+  margin: 0.35rem 0;
+  padding-left: 0.15rem;
+}
+
+.inline-code {
+  background: rgba(124, 108, 255, 0.14);
+  border: 1px solid rgba(124, 108, 255, 0.24);
+  border-radius: 0.3rem;
+  color: #d7caff;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.92em;
+  padding: 0.08rem 0.28rem;
+}
+
+.output-code {
+  background: #090b12;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: #dbeafe;
+  font-family: ui-monospace, SFMono-Regular, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0 0 1rem;
+  overflow-x: auto;
+  padding: 0.9rem;
+  white-space: pre;
+}
+
+.output-code code {
+  display: block;
+}
+
+.code-language {
+  color: #8b96c7;
+  display: block;
+  font-family: sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.55rem;
+  text-transform: uppercase;
+}
+
+.review-table-wrap {
+  margin: 0.75rem 0 1.1rem;
+  overflow-x: auto;
+}
+
+.review-table {
+  border-collapse: collapse;
+  min-width: 100%;
+  table-layout: auto;
+}
+
+.review-table th,
+.review-table td {
+  border: 1px solid #2a3144;
+  padding: 0.6rem 0.7rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.review-table th {
+  background: #181c2a;
+  color: #f8fafc;
+  font-size: 0.84rem;
+}
+
+.review-table td {
+  background: #0d1018;
+  color: #dbe2f0;
+  font-size: 0.88rem;
+}
+
+.review-rule {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 1rem 0;
 }
 
 .editor-panel {
