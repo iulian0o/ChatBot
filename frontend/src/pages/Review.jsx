@@ -1,93 +1,126 @@
-import { useState, useRef } from 'react'
+import { useState } from "react";
+import Sidebar from "../components/Sidebar";
+import ChatThread from "../components/ChatThread";
+import InputBar from "../components/InputBar";
+import "./styles/Review.css";
 
-import CodeEditor from '../components/CodeEditor'
-import ReviewOutput from '../components/ReviewOutput'
-import InputBar from '../components/InputBar'
-import './styles/Review.css'
+function makeTitle(text) {
+  return text.slice(0, 30) + (text.length > 30 ? "…" : "");
+}
 
 function Review() {
-  const [code, setCode] = useState('')
-  const [language, setLanguage] = useState('javascript')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [reply, setReply] = useState(null)
-  const [history, setHistory] = useState([])
+  const [sessions, setSessions] = useState([]);
+  const [activeId, setActiveId] = useState(null);
+  const [language, setLanguage] = useState("javascript");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const outputRef = useRef(null)
+  const activeSession = sessions.find((s) => s.id === activeId) || null;
+  const messages = activeSession ? activeSession.messages : [];
 
-  async function sendMessage(userMessage) {
-    setLoading(true)
-    setError(null)
+  function handleNewChat() {
+    const id = crypto.randomUUID();
+    const newSession = { id, title: "New chat", language, messages: [] };
+    setSessions((prev) => [newSession, ...prev]);
+    setActiveId(id);
+    setError(null);
+  }
 
-    const updatedHistory = [...history, { role: 'user', content: userMessage }]
+  function updateMessages(id, updater) {
+    setSessions((prev) =>
+      prev.map((s) =>
+        s.id === id ? { ...s, messages: updater(s.messages) } : s,
+      ),
+    );
+  }
+
+  async function handleSend(text, lang) {
+    let currentId = activeId;
+    if (!currentId) {
+      currentId = crypto.randomUUID();
+      const newSession = {
+        id: currentId,
+        title: makeTitle(text),
+        language: lang,
+        messages: [],
+      };
+      setSessions((prev) => [newSession, ...prev]);
+      setActiveId(currentId);
+    }
+
+    const userMsg = { role: "user", content: text };
+
+    updateMessages(currentId, (msgs) => {
+      if (msgs.length === 0) {
+        setSessions((prev) =>
+          prev.map((s) =>
+            s.id === currentId ? { ...s, title: makeTitle(text) } : s,
+          ),
+        );
+      }
+      return [...msgs, userMsg];
+    });
+
+    setLoading(true);
+    setError(null);
+
+    const currentMessages = activeSession ? activeSession.messages : [];
+    const historyToSend = [...currentMessages, userMsg];
 
     try {
-      const res = await fetch('/api/review', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, language, history: updatedHistory }),
-      })
+      const res = await fetch("/api/review", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: text,
+          language: lang,
+          history: historyToSend,
+        }),
+      });
 
-      const data = await res.json()
+      const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Something went wrong.')
-        return
+        setError(data.error || "Something went wrong.");
+        return;
       }
 
-      setReply(data.reply)
-      setHistory([...updatedHistory, { role: 'assistant', content: data.reply }])
-      outputRef.current?.scrollIntoView({ behavior: 'smooth' })
-
+      updateMessages(currentId, (msgs) => [
+        ...msgs,
+        { role: "assistant", content: data.reply },
+      ]);
     } catch {
-      setError('Could not reach the server. Is the backend running?')
+      setError("Could not reach the server. Is the backend running?");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
-  function handleReview() {
-    if (!code.trim()) return
-    setHistory([])   
-    setReply(null)
-    sendMessage(`Please review this ${language} code:\n\`\`\`${language}\n${code}\n\`\`\``)
-  }
-
-  function handleFollowUp(message) {
-    sendMessage(message)
-  }
-
   return (
-    <main className="review-page">
+    <div className="review-layout">
       {}
-      <section className="review-left">
-        <div className="panel-card editor-panel">
-          <CodeEditor
-            code={code}
-            language={language}
-            onCodeChange={setCode}
-            onLanguageChange={setLanguage}
-          />
-        </div>
-        <button
-          className="review-btn"
-          onClick={handleReview}
-          disabled={loading || !code.trim()}
-        >
-          {loading ? 'Reviewing…' : 'Review code →'}
-        </button>
-      </section>
+      <Sidebar
+        sessions={sessions}
+        activeId={activeId}
+        onSelect={setActiveId}
+        onNewChat={handleNewChat}
+      />
 
       {}
-      <section className="review-right" ref={outputRef}>
-        <div className="panel-card output-panel">
-          {error && <p className="review-error">{error}</p>}
-          <ReviewOutput reply={reply} loading={loading} />
-        </div>
-        <InputBar onSend={handleFollowUp} disabled={loading} />
-      </section>
-    </main>
-  )
+      <div className="review-main">
+        {error && <p className="review-error">{error}</p>}
+
+        <ChatThread messages={messages} loading={loading} />
+
+        <InputBar
+          onSend={handleSend}
+          disabled={loading}
+          language={language}
+          onLanguageChange={setLanguage}
+        />
+      </div>
+    </div>
+  );
 }
 
-export default Review
+export default Review;
