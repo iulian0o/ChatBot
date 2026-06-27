@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import ChatThread from "../components/ChatThread";
 import InputBar from "../components/InputBar";
@@ -9,11 +9,30 @@ function makeTitle(text) {
 }
 
 function Review() {
-  const [sessions, setSessions] = useState([]);
-  const [activeId, setActiveId] = useState(null);
+  const [sessions, setSessions] = useState(() => {
+    try {
+      const saved = localStorage.getItem("chat-sessions");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [activeId, setActiveId] = useState(() => {
+    return localStorage.getItem("chat-active-id") || null;
+  });
+
   const [language, setLanguage] = useState("javascript");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    localStorage.setItem("chat-sessions", JSON.stringify(sessions));
+  }, [sessions]);
+
+  useEffect(() => {
+    if (activeId) localStorage.setItem("chat-active-id", activeId);
+  }, [activeId]);
 
   const activeSession = sessions.find((s) => s.id === activeId) || null;
   const messages = activeSession ? activeSession.messages : [];
@@ -25,6 +44,14 @@ function Review() {
     setActiveId(id);
     setError(null);
   }
+
+  function handleDeleteSession(id) {
+  setSessions((prev) => prev.filter((s) => s.id !== id))
+  if (activeId === id) {
+    setActiveId(null)
+    localStorage.removeItem("chat-active-id")
+  }
+}
 
   function updateMessages(id, updater) {
     setSessions((prev) =>
@@ -98,20 +125,16 @@ function Review() {
 
   return (
     <div className="review-layout">
-      {}
       <Sidebar
         sessions={sessions}
         activeId={activeId}
         onSelect={setActiveId}
         onNewChat={handleNewChat}
+        onDelete={handleDeleteSession}
       />
-
-      {}
       <div className="review-main">
         {error && <p className="review-error">{error}</p>}
-
         <ChatThread messages={messages} loading={loading} />
-
         <InputBar
           onSend={handleSend}
           disabled={loading}
