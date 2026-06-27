@@ -1,15 +1,24 @@
-import { useEffect, useRef } from 'react'
-import './ChatThread.css'
+import { useEffect, useRef } from "react";
+import ReactMarkdown from 'react-markdown';
+import "./styles/ChatThread.css";
 
 function renderMessage(text) {
-  const segments = text.split(/(```[\s\S]*?```)/g)
+  const segments = text.split(/(```[\s\S]*?```)/g);
   return segments.map((seg, i) => {
-    if (seg.startsWith('```')) {
-      const code = seg.replace(/^```\w*\n?/, '').replace(/```$/, '')
-      return <pre key={i} className="chat-code"><code>{code}</code></pre>
+    if (seg.startsWith("```")) {
+      const code = seg.replace(/^```\w*\n?/, "").replace(/```$/, "");
+      return (
+        <pre key={i} className="chat-code">
+          <code>{code}</code>
+        </pre>
+      );
     }
-    return <span key={i} className="chat-text">{seg}</span>
-  })
+    return (
+      <span key={i} className="chat-text">
+        {seg}
+      </span>
+    );
+  });
 }
 
 function ChatThread({ messages, loading }) {
@@ -28,12 +37,11 @@ function ChatThread({ messages, loading }) {
       {messages.map((msg, i) => (
         <div key={i} className={`chat-bubble-wrap ${msg.role}`}>
           <div className={`chat-bubble ${msg.role}`}>
-            {renderMessage(msg.content)}
+            <ReactMarkdown>{msg.content}</ReactMarkdown>
           </div>
         </div>
       ))}
 
-      {}
       {loading && (
         <div className="chat-bubble-wrap assistant">
           <div className="chat-bubble assistant chat-typing">
@@ -47,4 +55,4 @@ function ChatThread({ messages, loading }) {
   )
 }
 
-export default ChatThread
+export default ChatThread;

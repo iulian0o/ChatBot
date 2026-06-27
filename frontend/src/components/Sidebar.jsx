@@ -1,4 +1,4 @@
-import './Sidebar.css'
+import "./styles/Sidebar.css";
 
 function Sidebar({ sessions, activeId, onSelect, onNewChat }) {
   return (
@@ -11,7 +11,7 @@ function Sidebar({ sessions, activeId, onSelect, onNewChat }) {
         {sessions.map((s) => (
           <li
             key={s.id}
-            className={`sidebar-item ${s.id === activeId ? 'active' : ''}`}
+            className={`sidebar-item ${s.id === activeId ? "active" : ""}`}
             onClick={() => onSelect(s.id)}
           >
             {s.title}
@@ -19,7 +19,7 @@ function Sidebar({ sessions, activeId, onSelect, onNewChat }) {
         ))}
       </ul>
     </aside>
-  )
+  );
 }
 
-export default Sidebar
+export default Sidebar;
