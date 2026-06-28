@@ -12,6 +12,17 @@
   align-items: center;
 }
 
+.login-panel-single {
+  display: block;
+  max-width: 420px;
+}
+
+.login-checking {
+  color: var(--text-muted);
+  padding: 1.25rem;
+  text-align: center;
+}
+
 .login-copy {
   max-width: 560px;
 }

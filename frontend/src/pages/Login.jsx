@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './styles/Login.css'
 
@@ -8,11 +8,39 @@ function Login({ onAuthChange }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [checkingAuth, setCheckingAuth] = useState(true)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
 
   const isRegistering = mode === 'register'
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function checkExistingSession() {
+      try {
+        const response = await fetch('/api/me', {
+          credentials: 'include',
+        })
+
+        if (response.ok && !cancelled) {
+          navigate('/review', { replace: true })
+          return
+        }
+      } catch {
+        // Stay on the login page if the session check fails.
+      } finally {
+        if (!cancelled) setCheckingAuth(false)
+      }
+    }
+
+    checkExistingSession()
+
+    return () => {
+      cancelled = true
+    }
+  }, [navigate])
 
   function switchMode(nextMode) {
     setMode(nextMode)
@@ -77,6 +105,13 @@ function Login({ onAuthChange }) {
 
   return (
     <main className="login-page">
+      {checkingAuth ? (
+        <section className="login-panel login-panel-single">
+          <div className="login-card login-checking">
+            Checking your session...
+          </div>
+        </section>
+      ) : (
       <section className="login-panel">
         <div className="login-copy">
           <p className="login-eyebrow">Account access</p>
@@ -154,6 +189,7 @@ function Login({ onAuthChange }) {
           </form>
         </div>
       </section>
+      )}
     </main>
   )
 }
