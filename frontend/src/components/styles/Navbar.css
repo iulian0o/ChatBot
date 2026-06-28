@@ -43,3 +43,61 @@
   border-bottom: 2px solid var(--accent);
   padding-bottom: 2px;
 }
+
+.navbar-user {
+  position: relative;
+}
+
+.navbar-user-button {
+  background: transparent;
+  border: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 0 0 0.25rem;
+}
+
+.navbar-user-button::after {
+  content: '';
+  display: block;
+  height: 2px;
+  margin-top: 2px;
+  background: var(--accent);
+}
+
+.navbar-user-menu {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+  min-width: 120px;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.65rem);
+  transform: translateY(-4px);
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.navbar-user:hover .navbar-user-menu,
+.navbar-user:focus-within .navbar-user-menu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.navbar-user-menu button {
+  background: transparent;
+  border: 0;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  padding: 0.65rem 0.85rem;
+  text-align: left;
+  width: 100%;
+}
+
+.navbar-user-menu button:hover {
+  color: var(--text);
+  background: rgba(124, 106, 247, 0.12);
+}

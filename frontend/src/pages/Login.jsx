@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './styles/Login.css'
 
-function Login() {
+function Login({ onAuthChange }) {
   const navigate = useNavigate()
   const [mode, setMode] = useState('login')
   const [username, setUsername] = useState('')
@@ -66,6 +66,7 @@ function Login() {
         return
       }
 
+      onAuthChange?.()
       navigate('/review')
     } catch {
       setError('Could not reach the server. Is the backend running?')
