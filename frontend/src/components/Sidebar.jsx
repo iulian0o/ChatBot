@@ -1,6 +1,6 @@
 import "./styles/Sidebar.css";
 
-function Sidebar({ sessions, activeId, onSelect, onNewChat }) {
+function Sidebar({ sessions, activeId, onSelect, onNewChat, onDelete }) {
   return (
     <aside className="sidebar">
       <button className="sidebar-new" onClick={onNewChat}>
@@ -14,7 +14,16 @@ function Sidebar({ sessions, activeId, onSelect, onNewChat }) {
             className={`sidebar-item ${s.id === activeId ? "active" : ""}`}
             onClick={() => onSelect(s.id)}
           >
-            {s.title}
+            <span className="sidebar-title">{s.title}</span>
+            <button
+              className="sidebar-delete"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(s.id);
+              }}
+            >
+              ✕
+            </button>
           </li>
         ))}
       </ul>
