@@ -7,6 +7,10 @@ services:
     container_name: code-reviewer-backend
     ports:
       - "4000:4000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - sqlite-data:/app/db/data
     networks:
       - app-network
     restart: unless-stopped
@@ -23,6 +27,9 @@ services:
     networks:
       - app-network
     restart: unless-stopped
+
+volumes:
+  sqlite-data:
 
 networks:
   app-network:
